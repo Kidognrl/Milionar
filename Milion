@@ -1,0 +1,74 @@
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+    private Question[] questions;
+    private int currentQuestionIndex;
+    private TextView questionTextView;
+    private Button trueButton;
+    private Button falseButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize the array of questions
+        questions = new Question[]{
+                new Question("Is the Earth round?", true),
+                new Question("Is the capital of France Madrid?", false),
+                new Question("Is water composed of two hydrogen atoms and one oxygen atom?", true),
+                // Add more questions here
+        };
+
+        // Initialize UI elements
+        questionTextView = findViewById(R.id.questionTextView);
+        trueButton = findViewById(R.id.trueButton);
+        falseButton = findViewById(R.id.falseButton);
+
+        // Set the initial question
+        currentQuestionIndex = 0;
+        setQuestion();
+
+        // Set click listeners for answer buttons
+        trueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer(true);
+            }
+        });
+
+        falseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer(false);
+            }
+        });
+    }
+
+    private void setQuestion() {
+        questionTextView.setText(questions[currentQuestionIndex].getQuestionText());
+    }
+
+    private void checkAnswer(boolean userAnswer) {
+        boolean correctAnswer = questions[currentQuestionIndex].isAnswerTrue();
+        if (userAnswer == correctAnswer) {
+            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Wrong answer!", Toast.LENGTH_SHORT).show();
+        }
+
+        // Move to the next question
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            setQuestion();
+        } else {
+            Toast.makeText(this, "You completed the quiz!", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
